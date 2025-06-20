@@ -4,6 +4,14 @@ using UnityEngine.AI;
 public class EnemyManager : MonoBehaviour
 {
     public GameObject player;
+    public Animator enemyAnimator;
+
+    private NavMeshAgent navMeshAgent;
+
+    private void Awake()
+    {
+        navMeshAgent = GetComponent<NavMeshAgent>();
+    }
 
     private void Start()
     {
@@ -12,6 +20,15 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
-        GetComponent<NavMeshAgent>().destination = player.transform.position;
+        navMeshAgent.destination = player.transform.position;
+
+        if (navMeshAgent.velocity.magnitude > 1f)
+        {
+            enemyAnimator.SetBool("isRunning", true);
+        }
+        else
+        {
+            enemyAnimator.SetBool("isRunning", false);
+        }
     }
 }

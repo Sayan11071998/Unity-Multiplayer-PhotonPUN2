@@ -31,4 +31,12 @@ public class EnemyManager : MonoBehaviour
             enemyAnimator.SetBool("isRunning", false);
         }
     }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject == player)
+        {
+            Debug.Log("Player hit by enemy!");
+        }
+    }
 }

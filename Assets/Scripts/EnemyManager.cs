@@ -5,6 +5,7 @@ public class EnemyManager : MonoBehaviour
 {
     public GameObject player;
     public Animator enemyAnimator;
+    public float damage = 20f;
 
     private NavMeshAgent navMeshAgent;
 
@@ -36,7 +37,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (other.gameObject == player)
         {
-            Debug.Log("Player hit by enemy!");
+            player.GetComponent<PlayerManager>().Hit(damage);
         }
     }
 }

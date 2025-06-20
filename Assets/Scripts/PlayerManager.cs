@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -7,5 +8,10 @@ public class PlayerManager : MonoBehaviour
     public void Hit(float damage)
     {
         health -= damage;
+
+        if (health <= 0f)
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 }

@@ -571,6 +571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   enemyAnimator: {fileID: 2840056800700225732}
+  damage: 20
 --- !u!195 &1634723572830739200
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -612,10 +613,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
-  m_Height: 2.5
+  m_Radius: 0.6
+  m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 3.3, z: 0}
 --- !u!54 &4668513557780065176
 Rigidbody:
   m_ObjectHideFlags: 0

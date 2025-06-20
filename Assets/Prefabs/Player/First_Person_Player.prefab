@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558893949fb8c624d97aa765158cf019, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 700
+  mouseSensitivity: 500
   playerBody: {fileID: 7885114010684570506}
 --- !u!1 &1612023778032093441
 GameObject:
@@ -961,6 +961,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7885114010684570506}
+  - component: {fileID: 6471711855072716293}
+  - component: {fileID: 4838254182063462752}
   m_Layer: 0
   m_Name: First_Person_Player
   m_TagString: Player
@@ -984,6 +986,45 @@ Transform:
   - {fileID: 685911732115873991}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &6471711855072716293
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5199354607036593921}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: -0.35, z: 0}
+--- !u!114 &4838254182063462752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5199354607036593921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a35e50453eb8b14c95700aef9dff5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 6471711855072716293}
+  speed: 7
 --- !u!1 &5355222509612678462
 GameObject:
   m_ObjectHideFlags: 0

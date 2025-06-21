@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class WeaponManager : MonoBehaviour
 {
+    public Animator playerAnimator;
     public GameObject playerCam;
     public float range = 100f;
     public float damage = 25f;
@@ -17,6 +18,8 @@ public class WeaponManager : MonoBehaviour
     private void Shoot()
     {
         RaycastHit hit;
+        playerAnimator.SetTrigger("isShooting");
+
         if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
         {
             EnemyManager enemyManager = hit.transform.GetComponent<EnemyManager>();

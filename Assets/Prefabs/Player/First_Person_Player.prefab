@@ -269,7 +269,7 @@ Animator:
   m_GameObject: {fileID: 1339242670723367857}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 056d7ee6328cfd049ab629933468a09b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -802,7 +802,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca73eb7edf37a534f80ab532c28c97e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 3004531253899443533}
   playerCam: {fileID: 2650087371223658875}
+  range: 100
+  damage: 25
 --- !u!1 &4238865046312787630
 GameObject:
   m_ObjectHideFlags: 0

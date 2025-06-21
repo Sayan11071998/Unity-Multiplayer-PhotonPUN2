@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < round; i++)
         {
             GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            Instantiate(enemyPrefab, spawnPoint.transform.position, Quaternion.identity);
+            GameObject enemySpawned = Instantiate(enemyPrefab, spawnPoint.transform.position, Quaternion.identity);
+            enemySpawned.GetComponent<EnemyManager>().gameManager = GetComponent<GameManager>();
             enemiesAlive++;
         }
     }

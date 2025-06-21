@@ -6,6 +6,7 @@ public class EnemyManager : MonoBehaviour
     public GameObject player;
     public Animator enemyAnimator;
     public float damage = 20f;
+    public float health = 100f;
 
     private NavMeshAgent navMeshAgent;
 
@@ -30,6 +31,16 @@ public class EnemyManager : MonoBehaviour
         else
         {
             enemyAnimator.SetBool("isRunning", false);
+        }
+    }
+
+    public void Hit(float damage)
+    {
+        health -= damage;
+
+        if (health <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 

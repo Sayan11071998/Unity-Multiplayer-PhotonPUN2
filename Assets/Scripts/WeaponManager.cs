@@ -4,6 +4,7 @@ public class WeaponManager : MonoBehaviour
 {
     public GameObject playerCam;
     public float range = 100f;
+    public float damage = 25f;
 
     private void Update()
     {
@@ -18,7 +19,12 @@ public class WeaponManager : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
         {
-            Debug.Log("Hit: " + hit.transform.name);
+            EnemyManager enemyManager = hit.transform.GetComponent<EnemyManager>();
+
+            if (enemyManager != null)
+            {
+                enemyManager.Hit(damage);
+            }
         }
     }
 }

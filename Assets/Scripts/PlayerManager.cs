@@ -1,11 +1,12 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
     public float health = 100f;
     public TextMeshProUGUI healthText;
+
+    public GameManager gameManager;
 
     public void Hit(float damage)
     {
@@ -14,7 +15,7 @@ public class PlayerManager : MonoBehaviour
 
         if (health <= 0f)
         {
-            SceneManager.LoadScene(0);
+            gameManager.EndGame();
         }
     }
 }

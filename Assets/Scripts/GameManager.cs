@@ -1,13 +1,13 @@
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject[] spawnPoints;
+    public GameObject enemyPrefab;
+    public TextMeshProUGUI roundNumber;
     public int enemiesAlive = 0;
     public int round = 0;
-
-    public GameObject[] spawnPoints;
-
-    public GameObject enemyPrefab;
 
     private void Update()
     {
@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
         {
             round++;
             NextWave(round);
+            roundNumber.text = "Round: " + round.ToString();
         }
     }
 

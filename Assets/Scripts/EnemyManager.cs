@@ -5,6 +5,9 @@ public class EnemyManager : MonoBehaviour
 {
     public GameObject player;
     public Animator enemyAnimator;
+    public float damage = 20f;
+    public float health = 100f;
+    public GameManager gameManager;
 
     private NavMeshAgent navMeshAgent;
 
@@ -32,11 +35,22 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    public void Hit(float damage)
+    {
+        health -= damage;
+
+        if (health <= 0)
+        {
+            gameManager.enemiesAlive--;
+            Destroy(gameObject);
+        }
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject == player)
         {
-            Debug.Log("Player hit by enemy!");
+            player.GetComponent<PlayerManager>().Hit(damage);
         }
     }
 }

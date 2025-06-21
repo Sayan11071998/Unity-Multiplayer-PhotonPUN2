@@ -269,7 +269,7 @@ Animator:
   m_GameObject: {fileID: 1339242670723367857}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 056d7ee6328cfd049ab629933468a09b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -714,6 +714,7 @@ GameObject:
   - component: {fileID: 7942213384625017197}
   - component: {fileID: 5534962046165155696}
   - component: {fileID: 7143696131700019960}
+  - component: {fileID: 1925678125806219547}
   m_Layer: 0
   m_Name: weapon
   m_TagString: Untagged
@@ -789,6 +790,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1925678125806219547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3287669757785552682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca73eb7edf37a534f80ab532c28c97e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 3004531253899443533}
+  playerCam: {fileID: 2650087371223658875}
+  range: 100
+  damage: 100
 --- !u!1 &4238865046312787630
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,6 +1011,7 @@ GameObject:
   - component: {fileID: 7885114010684570506}
   - component: {fileID: 6471711855072716293}
   - component: {fileID: 4838254182063462752}
+  - component: {fileID: 4711216957040783769}
   m_Layer: 0
   m_Name: First_Person_Player
   m_TagString: Player
@@ -1063,6 +1081,20 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  jumpHeight: 2
+--- !u!114 &4711216957040783769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5199354607036593921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0673a1b53356244daadfee68e1ced46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
 --- !u!1 &5355222509612678462
 GameObject:
   m_ObjectHideFlags: 0

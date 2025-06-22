@@ -807,6 +807,7 @@ MonoBehaviour:
   playerCam: {fileID: 2650087371223658875}
   range: 100
   damage: 25
+  muzzleFlash: {fileID: 7545470511851302909}
 --- !u!1 &4238865046312787630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1598,6 +1599,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63ba4e8426dae0647be279529d1fdad0, type: 3}
+--- !u!198 &7545470511851302909 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7300621318359352423, guid: 63ba4e8426dae0647be279529d1fdad0, type: 3}
+  m_PrefabInstance: {fileID: 1002016949575674778}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8829513862995942152 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8606199704237273234, guid: 63ba4e8426dae0647be279529d1fdad0, type: 3}

@@ -11,6 +11,12 @@ public class EnemyManager : MonoBehaviour
     public GameManager gameManager;
 
     public Slider slider;
+    public bool playerInReach;
+
+    public float attackAnimStartDelay;
+    public float delayBetweenAttacks;
+
+    private float attackDelayTimer;
 
     private NavMeshAgent navMeshAgent;
 
@@ -58,7 +64,35 @@ public class EnemyManager : MonoBehaviour
     {
         if (other.gameObject == player)
         {
+            playerInReach = true;
+        }
+    }
+
+    private void OnCollisionStay(Collision other)
+    {
+        if (playerInReach)
+        {
+            attackDelayTimer += Time.deltaTime;
+        }
+
+        if (attackDelayTimer >= delayBetweenAttacks - attackAnimStartDelay && attackDelayTimer <= delayBetweenAttacks && playerInReach)
+        {
+            enemyAnimator.SetTrigger("isAttacking");
+        }
+
+        if (attackDelayTimer >= delayBetweenAttacks && playerInReach)
+        {
             player.GetComponent<PlayerManager>().Hit(damage);
+            attackDelayTimer = 0f;
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject == player)
+        {
+            playerInReach = false;
+            attackDelayTimer = 0f;
         }
     }
 }

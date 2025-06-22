@@ -2952,10 +2952,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1925678125806219547, guid: 11757450563f7f84fbbe24d7ff6b1b17, type: 3}
-      propertyPath: hitParticles
-      value: 
-      objectReference: {fileID: 2499442898554911125, guid: 89d3d82b3a6c93542b948a06f9304233, type: 3}
     - target: {fileID: 4711216957040783769, guid: 11757450563f7f84fbbe24d7ff6b1b17, type: 3}
       propertyPath: hurtPanel
       value: 

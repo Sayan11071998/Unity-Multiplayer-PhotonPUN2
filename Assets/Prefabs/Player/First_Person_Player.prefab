@@ -808,6 +808,7 @@ MonoBehaviour:
   range: 100
   damage: 25
   muzzleFlash: {fileID: 7545470511851302909}
+  hitParticles: {fileID: 2499442898554911125, guid: 89d3d82b3a6c93542b948a06f9304233, type: 3}
 --- !u!1 &4238865046312787630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,6 +1016,7 @@ GameObject:
   - component: {fileID: 4838254182063462752}
   - component: {fileID: 4711216957040783769}
   - component: {fileID: 6261375708746727625}
+  - component: {fileID: 617700865685465963}
   m_Layer: 0
   m_Name: First_Person_Player
   m_TagString: Player
@@ -1127,6 +1129,27 @@ MonoBehaviour:
   gravity: -9.81
   cameraSensitivity: 10
   characterCamera: {fileID: 685911732115873991}
+--- !u!135 &617700865685465963
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5199354607036593921}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &5355222509612678462
 GameObject:
   m_ObjectHideFlags: 0

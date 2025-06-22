@@ -1012,6 +1012,7 @@ GameObject:
   - component: {fileID: 6471711855072716293}
   - component: {fileID: 4838254182063462752}
   - component: {fileID: 4711216957040783769}
+  - component: {fileID: 6261375708746727625}
   m_Layer: 0
   m_Name: First_Person_Player
   m_TagString: Player
@@ -1068,7 +1069,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5199354607036593921}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a35e50453eb8b14c95700aef9dff5d2, type: 3}
   m_Name: 
@@ -1095,6 +1096,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  healthText: {fileID: 0}
+  gameManager: {fileID: 0}
+--- !u!114 &6261375708746727625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5199354607036593921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd47e1a273ad88d47844e520fd0d3b4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 6471711855072716293}
+  speed: 12
+  isGrounded: 0
+  groundCheck: {fileID: 1296780145119411443}
+  groundDistance: 0.4
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  jumpHeight: 2
+  gravity: -9.81
+  cameraSensitivity: 10
+  characterCamera: {fileID: 685911732115873991}
 --- !u!1 &5355222509612678462
 GameObject:
   m_ObjectHideFlags: 0

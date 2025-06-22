@@ -17,6 +17,9 @@ public class TouchPlayerMovement : MonoBehaviour
     private int rightfingerId;
     private float halfScreenWidth;
 
+    private Vector2 moveInput;
+    private Vector2 moveTouchStartPosition;
+
     private void Start()
     {
         leftfingerId = -1;
@@ -28,6 +31,60 @@ public class TouchPlayerMovement : MonoBehaviour
     {
         GetTouchInput();
 
+        if (leftfingerId != -1)
+        {
+            Move();
+        }
+    }
+
+    void GetTouchInput()
+    {
+        if (Input.touchCount > 0)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                Touch t = Input.GetTouch(i);
+
+                if (t.phase == TouchPhase.Began)
+                {
+                    if (t.position.x < halfScreenWidth && leftfingerId == -1)
+                    {
+                        leftfingerId = t.fingerId;
+                        moveTouchStartPosition = t.position;
+                    }
+                }
+
+                if (t.phase == TouchPhase.Canceled)
+                {
+
+                }
+
+                if (t.phase == TouchPhase.Moved)
+                {
+                    if (leftfingerId == t.fingerId)
+                    {
+                        moveInput = t.position - moveTouchStartPosition;
+                    }
+                }
+
+                if (t.phase == TouchPhase.Stationary)
+                {
+
+                }
+
+                if (t.phase == TouchPhase.Ended)
+                {
+                    if(leftfingerId == t.fingerId)
+                    {
+                        leftfingerId = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    private void Move()
+    {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
@@ -35,10 +92,8 @@ public class TouchPlayerMovement : MonoBehaviour
             velocity.y = -2f;
         }
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        Vector3 move = transform.right * moveInput.normalized.x + transform.forward * moveInput.normalized.y;
 
-        Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * speed * Time.deltaTime);
 
         velocity.y += gravity * Time.deltaTime;
@@ -48,17 +103,6 @@ public class TouchPlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-    }
-
-    void GetTouchInput()
-    {
-        if (Input.touchCount > 0)
-        {
-            if (Input.touchCount > 0)
-            {
-                Debug.Log("Currently " + Input.touchCount + " fingers are touching the screen.");
-            }
         }
     }
 }

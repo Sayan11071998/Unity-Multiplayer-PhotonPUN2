@@ -8,6 +8,8 @@ public class PlayerManager : MonoBehaviour
 
     public GameManager gameManager;
     public GameObject playerCamera;
+    public GameObject hurtPanelGameObject;
+    public CanvasGroup hurtPanel;
 
     private Quaternion playerCameraOriginalRotation;
 
@@ -17,10 +19,17 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         playerCameraOriginalRotation = playerCamera.transform.localRotation;
+        hurtPanel.alpha = 0f;
+        hurtPanelGameObject.SetActive(true);
     }
 
     private void Update()
     {
+        if (hurtPanel.alpha > 0f)
+        {
+            hurtPanel.alpha -= Time.deltaTime;
+        }
+
         if (shakeTime < shakeDuration)
         {
             shakeTime += Time.deltaTime;
@@ -40,11 +49,14 @@ public class PlayerManager : MonoBehaviour
         if (health <= 0f)
         {
             gameManager.EndGame();
+            hurtPanel.alpha = 0f;
+            hurtPanelGameObject.SetActive(false);
         }
         else
         {
             shakeTime = 0f;
             shakeDuration = 0.2f;
+            hurtPanel.alpha = 1f;
         }
     }
 

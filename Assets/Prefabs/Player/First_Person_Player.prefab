@@ -1098,6 +1098,7 @@ MonoBehaviour:
   health: 100
   healthText: {fileID: 0}
   gameManager: {fileID: 0}
+  playerCamera: {fileID: 2650087371223658875}
 --- !u!114 &6261375708746727625
 MonoBehaviour:
   m_ObjectHideFlags: 0

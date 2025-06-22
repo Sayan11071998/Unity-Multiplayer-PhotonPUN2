@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class EnemyManager : MonoBehaviour
     public float damage = 20f;
     public float health = 100f;
     public GameManager gameManager;
+
+    public Slider slider;
 
     private NavMeshAgent navMeshAgent;
 
@@ -19,10 +22,14 @@ public class EnemyManager : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        slider.maxValue = health;
+        slider.value = health;
     }
 
     private void Update()
     {
+        slider.transform.LookAt(player.transform);
+
         navMeshAgent.destination = player.transform.position;
 
         if (navMeshAgent.velocity.magnitude > 1f)
@@ -38,6 +45,7 @@ public class EnemyManager : MonoBehaviour
     public void Hit(float damage)
     {
         health -= damage;
+        slider.value = health;
 
         if (health <= 0)
         {

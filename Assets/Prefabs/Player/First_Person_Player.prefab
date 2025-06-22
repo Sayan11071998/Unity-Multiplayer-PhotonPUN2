@@ -805,7 +805,7 @@ MonoBehaviour:
   playerAnimator: {fileID: 3004531253899443533}
   playerCam: {fileID: 2650087371223658875}
   range: 100
-  damage: 100
+  damage: 25
 --- !u!1 &4238865046312787630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1099,6 +1099,8 @@ MonoBehaviour:
   healthText: {fileID: 0}
   gameManager: {fileID: 0}
   playerCamera: {fileID: 2650087371223658875}
+  hurtPanelGameObject: {fileID: 0}
+  hurtPanel: {fileID: 0}
 --- !u!114 &6261375708746727625
 MonoBehaviour:
   m_ObjectHideFlags: 0

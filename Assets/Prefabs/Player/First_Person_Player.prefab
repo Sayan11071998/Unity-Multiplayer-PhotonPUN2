@@ -1120,6 +1120,8 @@ MonoBehaviour:
     m_Bits: 0
   jumpHeight: 2
   gravity: -9.81
+  cameraSensitivity: 10
+  characterCamera: {fileID: 685911732115873991}
 --- !u!1 &5355222509612678462
 GameObject:
   m_ObjectHideFlags: 0

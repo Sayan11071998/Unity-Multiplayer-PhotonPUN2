@@ -11,6 +11,9 @@ public class TouchPlayerMovement : MonoBehaviour
     public float jumpHeight = 2f;
     public float gravity = -9.81f;
 
+    public float cameraSensitivity = 0.1f;
+    public Transform characterCamera;
+
     private Vector3 velocity;
 
     private int leftfingerId;
@@ -19,6 +22,9 @@ public class TouchPlayerMovement : MonoBehaviour
 
     private Vector2 moveInput;
     private Vector2 moveTouchStartPosition;
+
+    private Vector2 lookInput;
+    private float cameraPitch;
 
     private void Start()
     {
@@ -34,6 +40,11 @@ public class TouchPlayerMovement : MonoBehaviour
         if (leftfingerId != -1)
         {
             Move();
+        }
+
+        if (rightfingerId != -1)
+        {
+            LookAround();
         }
     }
 
@@ -52,6 +63,10 @@ public class TouchPlayerMovement : MonoBehaviour
                         leftfingerId = t.fingerId;
                         moveTouchStartPosition = t.position;
                     }
+                    else if (t.position.x >= halfScreenWidth && rightfingerId == -1)
+                    {
+                        rightfingerId = t.fingerId;
+                    }
                 }
 
                 if (t.phase == TouchPhase.Canceled)
@@ -65,18 +80,29 @@ public class TouchPlayerMovement : MonoBehaviour
                     {
                         moveInput = t.position - moveTouchStartPosition;
                     }
+                    else if (rightfingerId == t.fingerId)
+                    {
+                        lookInput = t.deltaPosition * cameraSensitivity * Time.deltaTime;
+                    }
                 }
 
                 if (t.phase == TouchPhase.Stationary)
                 {
-
+                    if (t.fingerId == rightfingerId)
+                    {
+                        lookInput = Vector2.zero;
+                    }
                 }
 
                 if (t.phase == TouchPhase.Ended)
                 {
-                    if(leftfingerId == t.fingerId)
+                    if (leftfingerId == t.fingerId)
                     {
                         leftfingerId = -1;
+                    }
+                    else if (rightfingerId == t.fingerId)
+                    {
+                        rightfingerId = -1;
                     }
                 }
             }
@@ -104,5 +130,12 @@ public class TouchPlayerMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+    }
+
+    private void LookAround()
+    {
+        cameraPitch = Mathf.Clamp(cameraPitch, -90, 90);
+        characterCamera.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
+        transform.Rotate(transform.up * lookInput.x);
     }
 }

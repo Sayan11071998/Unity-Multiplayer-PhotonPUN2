@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public int enemiesAlive = 0;
     public int round = 0;
 
+    public GameObject pauseMenu;
+
     private void Update()
     {
         if (enemiesAlive == 0)
@@ -19,6 +21,11 @@ public class GameManager : MonoBehaviour
             round++;
             NextWave(round);
             roundNumber.text = "Round: " + round.ToString();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Pause();
         }
     }
 
@@ -52,5 +59,21 @@ public class GameManager : MonoBehaviour
         Cursor.visible = true;
         endScreen.SetActive(true);
         roundsSurvived.text = round.ToString();
+    }
+
+    public void Pause()
+    {
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void Continue()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }

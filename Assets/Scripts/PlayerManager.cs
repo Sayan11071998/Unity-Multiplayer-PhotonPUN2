@@ -20,14 +20,33 @@ public class PlayerManager : MonoBehaviour
     {
         playerCameraOriginalRotation = playerCamera.transform.localRotation;
         hurtPanel.alpha = 0f;
-        hurtPanelGameObject.SetActive(true);
+        hurtPanelGameObject.SetActive(false);
     }
 
     private void Update()
     {
+        if (Time.timeScale == 0f)
+        {
+            if (hurtPanelGameObject.activeInHierarchy)
+            {
+                hurtPanelGameObject.SetActive(false);
+            }
+            return;
+        }
+
+        if (hurtPanel.alpha > 0f && !hurtPanelGameObject.activeInHierarchy)
+        {
+            hurtPanelGameObject.SetActive(true);
+        }
+
         if (hurtPanel.alpha > 0f)
         {
             hurtPanel.alpha -= Time.deltaTime;
+
+            if (hurtPanel.alpha <= 0f)
+            {
+                hurtPanelGameObject.SetActive(false);
+            }
         }
 
         if (shakeTime < shakeDuration)
@@ -57,6 +76,7 @@ public class PlayerManager : MonoBehaviour
             shakeTime = 0f;
             shakeDuration = 0.2f;
             hurtPanel.alpha = 1f;
+            hurtPanelGameObject.SetActive(true);
         }
     }
 

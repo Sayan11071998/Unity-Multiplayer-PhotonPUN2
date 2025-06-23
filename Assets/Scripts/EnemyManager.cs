@@ -55,8 +55,13 @@ public class EnemyManager : MonoBehaviour
 
         if (health <= 0)
         {
+            enemyAnimator.SetTrigger("isDead");
             gameManager.enemiesAlive--;
-            Destroy(gameObject);
+            Destroy(gameObject, 10f);
+            slider.gameObject.SetActive(false);
+            Destroy(GetComponent<NavMeshAgent>());
+            Destroy(GetComponent<EnemyManager>());
+            Destroy(GetComponent<CapsuleCollider>());
         }
     }
 

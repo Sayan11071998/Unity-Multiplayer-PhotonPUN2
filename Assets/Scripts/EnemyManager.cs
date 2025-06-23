@@ -16,6 +16,9 @@ public class EnemyManager : MonoBehaviour
     public float attackAnimStartDelay;
     public float delayBetweenAttacks;
 
+    public AudioSource audioSource;
+    public AudioClip[] zombieSounds;
+
     private float attackDelayTimer;
 
     private NavMeshAgent navMeshAgent;
@@ -27,6 +30,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player");
         slider.maxValue = health;
         slider.value = health;
@@ -34,6 +38,12 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.clip = zombieSounds[Random.Range(0, zombieSounds.Length)];
+            audioSource.Play();
+        }
+
         slider.transform.LookAt(player.transform);
 
         navMeshAgent.destination = player.transform.position;

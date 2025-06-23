@@ -10,6 +10,14 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject hitParticles;
 
+    public AudioClip gunShot;
+    public AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     private void Update()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -21,6 +29,8 @@ public class WeaponManager : MonoBehaviour
     private void Shoot()
     {
         muzzleFlash.Play();
+        audioSource.PlayOneShot(gunShot);
+
         RaycastHit hit;
         playerAnimator.SetTrigger("isShooting");
 

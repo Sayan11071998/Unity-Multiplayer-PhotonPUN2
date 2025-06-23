@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     public void BackToMainMenu()
     {
         Time.timeScale = 1f;
+        AudioListener.volume = 1;
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        AudioListener.volume = 0;
     }
 
     public void Continue()
@@ -75,5 +77,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        AudioListener.volume = 1;
     }
 }

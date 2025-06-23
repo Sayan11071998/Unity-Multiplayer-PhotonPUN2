@@ -6,6 +6,17 @@ public class WeaponManager : MonoBehaviour
     public GameObject playerCam;
     public float range = 100f;
     public float damage = 25f;
+    public ParticleSystem muzzleFlash;
+
+    public GameObject hitParticles;
+
+    public AudioClip gunShot;
+    public AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
@@ -17,6 +28,9 @@ public class WeaponManager : MonoBehaviour
 
     private void Shoot()
     {
+        muzzleFlash.Play();
+        audioSource.PlayOneShot(gunShot);
+
         RaycastHit hit;
         playerAnimator.SetTrigger("isShooting");
 
@@ -27,6 +41,10 @@ public class WeaponManager : MonoBehaviour
             if (enemyManager != null)
             {
                 enemyManager.Hit(damage);
+                GameObject instParticles = Instantiate(hitParticles, hit.point, Quaternion.LookRotation(hit.normal));
+                instParticles.transform.parent = hit.transform;
+
+                Destroy(instParticles, 2f);
             }
         }
     }

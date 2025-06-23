@@ -1,39 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class ShopManager : MonoBehaviour
 {
-    public int price = 50;
     public Text priceNumber;
     public Text priceText;
-    PlayerManager playerManager;
-    bool playerIsInReach = false;
+
+    public int price = 50;
 
     public bool HealthStation;
     public bool ammoStation;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        priceNumber.text = price.ToString();
-    }
+    private PlayerManager playerManager;
+    private bool playerIsInReach = false;
 
-    // Update is called once per frame
-    void Update()
+    private void Start() => priceNumber.text = price.ToString();
+
+    private void Update()
     {
         if (playerIsInReach)
         {
             if (Input.GetKeyDown(KeyCode.E))
-            {
                 BuyShop();
-            }
         }
     }
 
-    void OnTriggerEnter(Collider player)
+    private void OnTriggerEnter(Collider player)
     {
         if (player.CompareTag("Player"))
         {
@@ -43,7 +35,8 @@ public class ShopManager : MonoBehaviour
             playerManager = player.gameObject.GetComponent<PlayerManager>();
         }
     }
-    void OnTriggerExit(Collider player)
+
+    private void OnTriggerExit(Collider player)
     {
         if (player.CompareTag("Player"))
         {
@@ -52,16 +45,19 @@ public class ShopManager : MonoBehaviour
             playerIsInReach = false;
         }
     }
+
     public void BuyShop()
     {
         if (playerManager.currentPoints >= price)
         {
             playerManager.currentPoints -= price;
+
             if (HealthStation)
             {
                 playerManager.health = playerManager.healthCap;
                 playerManager.healthNumber.text = playerManager.health.ToString();
             }
+
             if (ammoStation)
             {
                 foreach (Transform child in playerManager.weaponHolder.transform)
@@ -75,10 +71,6 @@ public class ShopManager : MonoBehaviour
                     }
                 }
             }
-        }
-        else
-        {
-            Debug.Log("Poor");
         }
     }
 }

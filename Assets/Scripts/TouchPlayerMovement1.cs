@@ -3,27 +3,28 @@ using UnityEngine;
 public class TouchPlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
-    public float speed = 12f;
-    public bool isGrounded;
     public Transform groundCheck;
-    public float groundDistance = 0.4f;
+    public Transform characterCamera;
     public LayerMask groundMask;
+
+    public float speed = 12f;
+    public float groundDistance = 0.4f;
     public float jumpHeight = 2f;
     public float gravity = -9.81f;
-
     public float cameraSensitivity = 0.1f;
-    public Transform characterCamera;
+
+    public bool isGrounded;
 
     private Vector3 velocity;
 
-    private int leftfingerId;
-    private int rightfingerId;
-    private float halfScreenWidth;
-
     private Vector2 moveInput;
     private Vector2 moveTouchStartPosition;
-
     private Vector2 lookInput;
+
+    private int leftfingerId;
+    private int rightfingerId;
+
+    private float halfScreenWidth;
     private float cameraPitch;
 
     private void Start()
@@ -38,17 +39,13 @@ public class TouchPlayerMovement : MonoBehaviour
         GetTouchInput();
 
         if (leftfingerId != -1)
-        {
             Move();
-        }
 
         if (rightfingerId != -1)
-        {
             LookAround();
-        }
     }
 
-    void GetTouchInput()
+    private void GetTouchInput()
     {
         if (Input.touchCount > 0)
         {
@@ -69,41 +66,28 @@ public class TouchPlayerMovement : MonoBehaviour
                     }
                 }
 
-                if (t.phase == TouchPhase.Canceled)
-                {
-
-                }
+                if (t.phase == TouchPhase.Canceled) { }
 
                 if (t.phase == TouchPhase.Moved)
                 {
                     if (leftfingerId == t.fingerId)
-                    {
                         moveInput = t.position - moveTouchStartPosition;
-                    }
                     else if (rightfingerId == t.fingerId)
-                    {
                         lookInput = t.deltaPosition * cameraSensitivity * Time.deltaTime;
-                    }
                 }
 
                 if (t.phase == TouchPhase.Stationary)
                 {
                     if (t.fingerId == rightfingerId)
-                    {
                         lookInput = Vector2.zero;
-                    }
                 }
 
                 if (t.phase == TouchPhase.Ended)
                 {
                     if (leftfingerId == t.fingerId)
-                    {
                         leftfingerId = -1;
-                    }
                     else if (rightfingerId == t.fingerId)
-                    {
                         rightfingerId = -1;
-                    }
                 }
             }
         }
@@ -114,9 +98,7 @@ public class TouchPlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
-        {
             velocity.y = -2f;
-        }
 
         Vector3 move = transform.right * moveInput.normalized.x + transform.forward * moveInput.normalized.y;
 
@@ -127,9 +109,7 @@ public class TouchPlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
 
         if (Input.GetButtonDown("Jump") && isGrounded)
-        {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
     }
 
     private void LookAround()

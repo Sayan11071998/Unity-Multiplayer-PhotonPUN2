@@ -1,34 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public int enemiesAlive = 0;
-    public int round = 0;
     public GameObject[] spawnPoints;
     public GameObject enemyPrefab;
-    public Text roundNumber;
     public GameObject endScreen;
-    public Text roundsSurvived;
     public GameObject pauseMenu;
-    public Animator blackScreenAnimator;
+    public Text roundNumber;
+    public Text roundsSurvived;
 
-    /*    public GameObject enemyPrefab;
-        public Text roundNumber;
-        public GameObject endScreen;
-        public Text roundsSurvivedNumber;
-        public Text enemiesKilledNumber;
-        public int enemiesKilled;*/
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int enemiesAlive = 0;
+    public int round = 0;
 
-    void Update()
+    private void Update()
     {
         if (enemiesAlive == 0)
         {
@@ -40,13 +26,9 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!pauseMenu.activeSelf)
-            {
                 Pause();
-            }
             else
-            {
                 Continue();
-            }
         }
     }
 
@@ -94,7 +76,6 @@ public class GameManager : MonoBehaviour
     public void BackToMainMenu()
     {
         Time.timeScale = 1;
-        blackScreenAnimator.SetTrigger("FadeIn");
         Invoke("LoadMainMenuScene", 0.4f);
     }
 

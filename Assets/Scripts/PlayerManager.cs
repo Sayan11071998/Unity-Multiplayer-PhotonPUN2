@@ -1,87 +1,113 @@
-using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
-    public float health = 100f;
-    public TextMeshProUGUI healthText;
-
+    public float health = 100;
+    public Text healthNumber;
     public GameManager gameManager;
-    public GameObject playerCamera;
-    public GameObject hurtPanelGameObject;
-    public CanvasGroup hurtPanel;
 
+    public GameObject playerCamera;
     private Quaternion playerCameraOriginalRotation;
 
     private float shakeTime;
     private float shakeDuration;
 
-    private void Start()
+    public CanvasGroup hurtPanel;
+
+    public GameObject weaponHolder;
+
+    int activeWeaponIndex;
+    GameObject activeWeapon;
+
+    public float currentPoints;
+    public Text pointsNumber;
+    public float healthCap;
+
+
+    // Start is called before the first frame update
+    void Start()
     {
         playerCameraOriginalRotation = playerCamera.transform.localRotation;
-        hurtPanel.alpha = 0f;
-        hurtPanelGameObject.SetActive(false);
+        healthNumber.text = health.ToString();
+
+        weaponSwitch(0);
+
+        healthCap = health;
     }
 
     private void Update()
     {
-        if (Time.timeScale == 0f)
-        {
-            if (hurtPanelGameObject.activeInHierarchy)
-            {
-                hurtPanelGameObject.SetActive(false);
-            }
-            return;
-        }
-
-        if (hurtPanel.alpha > 0f && !hurtPanelGameObject.activeInHierarchy)
-        {
-            hurtPanelGameObject.SetActive(true);
-        }
-
-        if (hurtPanel.alpha > 0f)
+        if (hurtPanel.alpha > 0)
         {
             hurtPanel.alpha -= Time.deltaTime;
-
-            if (hurtPanel.alpha <= 0f)
-            {
-                hurtPanelGameObject.SetActive(false);
-            }
         }
-
-        if (shakeTime < shakeDuration)
-        {
+       
+        if (shakeTime < shakeDuration) {
             shakeTime += Time.deltaTime;
-            CameraShake();
-        }
-        else if (playerCamera.transform.localRotation != playerCameraOriginalRotation)
+            cameraShake();
+        }else if (playerCamera.transform.localRotation != playerCameraOriginalRotation)
         {
             playerCamera.transform.localRotation = playerCameraOriginalRotation;
         }
+
+        if (Input.GetAxis("Mouse ScrollWheel") != 0f)
+        {
+            weaponSwitch(activeWeaponIndex + 1);
+        }
+
+        pointsNumber.text = currentPoints.ToString();
+
     }
 
     public void Hit(float damage)
     {
         health -= damage;
-        healthText.text = "Health: " + health.ToString("F0");
+        healthNumber.text = health.ToString();
 
-        if (health <= 0f)
+        if (health <= 0)
         {
             gameManager.EndGame();
-            hurtPanel.alpha = 0f;
-            hurtPanelGameObject.SetActive(false);
         }
         else
         {
-            shakeTime = 0f;
+            shakeTime = 0;
             shakeDuration = 0.2f;
-            hurtPanel.alpha = 1f;
-            hurtPanelGameObject.SetActive(true);
+            hurtPanel.alpha = 1;
         }
     }
 
-    public void CameraShake()
+    public void cameraShake()
     {
-        playerCamera.transform.localRotation = Quaternion.Euler(Random.Range(-2, 2), 0, 0);
+        playerCamera.transform.localRotation = Quaternion.Euler(Random.Range(-2f, 2f), 0, 0);
     }
+
+    public void weaponSwitch(int weaponIndex)
+    {
+        int index = 0;
+        int amountOfWeapons = weaponHolder.transform.childCount;
+
+        if (weaponIndex > amountOfWeapons - 1)
+        {
+            weaponIndex = 0;
+        }
+        foreach (Transform child in weaponHolder.transform)
+        {
+            if (child.gameObject.activeSelf)
+            {
+                child.gameObject.SetActive(false);
+            }
+            if (index == weaponIndex)
+            {
+                child.gameObject.SetActive(true);
+                activeWeapon = child.gameObject;
+            }
+            index++;
+        }
+        activeWeaponIndex = weaponIndex;
+    }
+
 }

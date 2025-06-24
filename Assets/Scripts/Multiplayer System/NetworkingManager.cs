@@ -57,6 +57,6 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Loading Scene 1....");
-        SceneManager.LoadScene(1);
+        PhotonNetwork.LoadLevel(2);
     }
 }

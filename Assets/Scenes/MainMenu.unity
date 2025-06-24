@@ -1009,9 +1009,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1323825106}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: StartGame
+      - m_Target: {fileID: 1192937219}
+        m_TargetAssemblyTypeName: NetworkingManager, Assembly-CSharp
+        m_MethodName: FindMatch
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

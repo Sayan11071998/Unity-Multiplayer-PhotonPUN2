@@ -1,5 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class NetworkingManager : MonoBehaviourPunCallbacks
 {
@@ -23,5 +25,38 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
         Debug.Log("Ready for Multiplayer...");
         connecting.SetActive(false);
         multiplayer.SetActive(true);
+    }
+
+    public void FindMatch()
+    {
+        Debug.Log("Finding Room...");
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        MakeRoom();
+    }
+
+    private void MakeRoom()
+    {
+        int randomRoomName = Random.Range(0, 5000);
+
+        RoomOptions roomOptions = new RoomOptions()
+        {
+            IsVisible = true,
+            IsOpen = true,
+            MaxPlayers = 6,
+            PublishUserId = true
+        };
+
+        PhotonNetwork.CreateRoom("RoomName_" + randomRoomName, roomOptions);
+        Debug.Log("Room Created..." + randomRoomName);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Loading Scene 1....");
+        SceneManager.LoadScene(1);
     }
 }

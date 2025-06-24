@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
     public int enemiesAlive = 0;
     public int round = 0;
 
+    private void Start()
+    {
+        spawnPoints = GameObject.FindGameObjectsWithTag("Spawners");
+    }
+
     private void Update()
     {
         if (enemiesAlive == 0)

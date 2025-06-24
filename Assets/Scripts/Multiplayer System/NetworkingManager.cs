@@ -3,6 +3,9 @@ using Photon.Pun;
 
 public class NetworkingManager : MonoBehaviourPunCallbacks
 {
+    public GameObject connecting;
+    public GameObject multiplayer;
+
     private void Start()
     {
         Debug.Log("Connecting to Server...");
@@ -18,5 +21,7 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Ready for Multiplayer...");
+        connecting.SetActive(false);
+        multiplayer.SetActive(true);
     }
 }

@@ -2,16 +2,13 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    public float mouseSensitivity = 100f;
     public Transform playerBody;
+
+    public float mouseSensitivity = 100f;
 
     private float xRotation = 0f;
 
-    private void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+    private void Start() => Cursor.lockState = CursorLockMode.Locked;
 
     private void Update()
     {

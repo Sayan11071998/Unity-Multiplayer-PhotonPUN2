@@ -4,34 +4,30 @@ using UnityEngine.UI;
 
 public class EnemyManager : MonoBehaviour
 {
+    public GameManager gameManager;
     public GameObject player;
     public Animator enemyAnimator;
-    public float damage = 20f;
-    public float health = 100f;
-    public GameManager gameManager;
-
     public Slider slider;
-    public bool playerInReach;
+    public AudioClip[] zombieSounds;
+    public AudioSource audioSource;
 
-    public float attackAnimStartDelay;
+    public float damage = 20f;
+    public float health = 100;
+    public int points = 20;
+
+    public bool playerInReach;
+    private float attackDelayTimer;
+    public float howMuchEarlierStartAttackAnim;
     public float delayBetweenAttacks;
 
-    public AudioSource audioSource;
-    public AudioClip[] zombieSounds;
-
-    private float attackDelayTimer;
-
     private NavMeshAgent navMeshAgent;
-
-    private void Awake()
-    {
-        navMeshAgent = GetComponent<NavMeshAgent>();
-    }
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
+
         slider.maxValue = health;
         slider.value = health;
     }
@@ -44,17 +40,43 @@ public class EnemyManager : MonoBehaviour
             audioSource.Play();
         }
 
-        slider.transform.LookAt(player.transform);
+        slider.gameObject.transform.LookAt(player.transform.position);
 
         navMeshAgent.destination = player.transform.position;
 
-        if (navMeshAgent.velocity.magnitude > 1f)
-        {
+        if (navMeshAgent.velocity.magnitude > 1)
             enemyAnimator.SetBool("isRunning", true);
-        }
         else
-        {
             enemyAnimator.SetBool("isRunning", false);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject == player)
+            playerInReach = true;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (playerInReach)
+            attackDelayTimer += Time.deltaTime;
+
+        if (attackDelayTimer >= delayBetweenAttacks - howMuchEarlierStartAttackAnim && attackDelayTimer <= delayBetweenAttacks && playerInReach)
+            enemyAnimator.SetTrigger("isAttacking");
+
+        if (attackDelayTimer >= delayBetweenAttacks && playerInReach)
+        {
+            player.GetComponent<PlayerManager>().Hit(damage);
+            attackDelayTimer = 0;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject == player)
+        {
+            playerInReach = false;
+            attackDelayTimer = 0;
         }
     }
 
@@ -62,52 +84,15 @@ public class EnemyManager : MonoBehaviour
     {
         health -= damage;
         slider.value = health;
-
         if (health <= 0)
         {
             enemyAnimator.SetTrigger("isDead");
-            gameManager.enemiesAlive--;
             Destroy(gameObject, 10f);
+            gameManager.enemiesAlive--;
             slider.gameObject.SetActive(false);
-            Destroy(GetComponent<NavMeshAgent>());
-            Destroy(GetComponent<EnemyManager>());
+            Destroy(navMeshAgent);
+            Destroy(this);
             Destroy(GetComponent<CapsuleCollider>());
-        }
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject == player)
-        {
-            playerInReach = true;
-        }
-    }
-
-    private void OnCollisionStay(Collision other)
-    {
-        if (playerInReach)
-        {
-            attackDelayTimer += Time.deltaTime;
-        }
-
-        if (attackDelayTimer >= delayBetweenAttacks - attackAnimStartDelay && attackDelayTimer <= delayBetweenAttacks && playerInReach)
-        {
-            enemyAnimator.SetTrigger("isAttacking");
-        }
-
-        if (attackDelayTimer >= delayBetweenAttacks && playerInReach)
-        {
-            player.GetComponent<PlayerManager>().Hit(damage);
-            attackDelayTimer = 0f;
-        }
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject == player)
-        {
-            playerInReach = false;
-            attackDelayTimer = 0f;
         }
     }
 }

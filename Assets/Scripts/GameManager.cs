@@ -1,5 +1,5 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -7,12 +7,12 @@ public class GameManager : MonoBehaviour
     public GameObject[] spawnPoints;
     public GameObject enemyPrefab;
     public GameObject endScreen;
-    public TextMeshProUGUI roundNumber;
-    public TextMeshProUGUI roundsSurvived;
+    public GameObject pauseMenu;
+    public Text roundNumber;
+    public Text roundsSurvived;
+
     public int enemiesAlive = 0;
     public int round = 0;
-
-    public GameObject pauseMenu;
 
     private void Update()
     {
@@ -20,18 +20,21 @@ public class GameManager : MonoBehaviour
         {
             round++;
             NextWave(round);
-            roundNumber.text = "Round: " + round.ToString();
+            roundNumber.text = round.ToString();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Pause();
+            if (!pauseMenu.activeSelf)
+                Pause();
+            else
+                Continue();
         }
     }
 
-    private void NextWave(int round)
+    public void NextWave(int round)
     {
-        for (int i = 0; i < round; i++)
+        for (var x = 0; x < round; x++)
         {
             GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
             GameObject enemySpawned = Instantiate(enemyPrefab, spawnPoint.transform.position, Quaternion.identity);
@@ -40,43 +43,45 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void Restart()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void BackToMainMenu()
-    {
-        Time.timeScale = 1f;
-        AudioListener.volume = 1;
-        SceneManager.LoadScene("MainMenu");
-    }
-
     public void EndGame()
     {
-        Time.timeScale = 0f;
+        Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
         endScreen.SetActive(true);
         roundsSurvived.text = round.ToString();
     }
 
+    public void Restart()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(1);
+    }
+
     public void Pause()
     {
-        pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
         AudioListener.volume = 0;
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
     }
 
     public void Continue()
     {
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         AudioListener.volume = 1;
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+    }
+
+    public void BackToMainMenu()
+    {
+        Time.timeScale = 1;
+        Invoke("LoadMainMenuScene", 0.4f);
+    }
+
+    public void LoadMainMenuScene()
+    {
+        AudioListener.volume = 1;
+        SceneManager.LoadScene(0);
     }
 }

@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,8 @@ public class PlayerManager : MonoBehaviour
     public float currentPoints;
     public float healthCap;
     public float health = 100;
+
+    public PhotonView photonView;
 
     private Quaternion playerCameraOriginalRotation;
     private GameObject activeWeapon;
@@ -32,8 +35,14 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (photonView != null && !photonView.IsMine)
+        {
+            playerCamera.SetActive(false);
+            return;
+        }
+
         if (hurtPanel.alpha > 0)
-            hurtPanel.alpha -= Time.deltaTime;
+                hurtPanel.alpha -= Time.deltaTime;
 
         if (shakeTime < shakeDuration)
         {

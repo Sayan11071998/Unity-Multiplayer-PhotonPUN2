@@ -1,4 +1,5 @@
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +32,8 @@ public class WeaponManager : MonoBehaviour
 
     public string weaponType;
 
+    public PhotonView photonView;
+
     private float swaySensitivity;
     private float firerateTimer = 0;
 
@@ -49,6 +52,8 @@ public class WeaponManager : MonoBehaviour
 
     private void Update()
     {
+        if (photonView != null && !photonView.IsMine) return;
+
         if (playerAnimator.GetBool("isShooting"))
             playerAnimator.SetBool("isShooting", false);
 

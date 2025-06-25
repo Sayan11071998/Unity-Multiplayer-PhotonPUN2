@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -14,11 +15,15 @@ public class PlayerMovement : MonoBehaviour
 
     public bool isGrounded;
 
+    public PhotonView photonView;
+
     private float speed = 12f;
     private Vector3 velocity;
 
     private void Update()
     {
+        if (PhotonNetwork.InRoom && !photonView.IsMine) return;
+
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)

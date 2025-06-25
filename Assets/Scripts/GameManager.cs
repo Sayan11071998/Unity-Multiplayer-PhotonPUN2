@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class GameManager : MonoBehaviour
     public int enemiesAlive = 0;
     public int round = 0;
 
+    public PhotonView photonView;
+
     private void Start()
     {
         spawnPoints = GameObject.FindGameObjectsWithTag("Spawners");
@@ -21,11 +24,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (enemiesAlive == 0)
+        if (!PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient && photonView.IsMine)
         {
-            round++;
-            NextWave(round);
-            roundNumber.text = round.ToString();
+            if (enemiesAlive == 0)
+            {
+                round++;
+                NextWave(round);
+                roundNumber.text = round.ToString();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -42,7 +48,17 @@ public class GameManager : MonoBehaviour
         for (var x = 0; x < round; x++)
         {
             GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            GameObject enemySpawned = Instantiate(enemyPrefab, spawnPoint.transform.position, Quaternion.identity);
+            GameObject enemySpawned;
+
+            if (PhotonNetwork.InRoom)
+            {
+                enemySpawned = PhotonNetwork.Instantiate("Zombie", spawnPoint.transform.position, Quaternion.identity);
+            }
+            else
+            {
+                enemySpawned = Instantiate(Resources.Load("Zombie"), spawnPoint.transform.position, Quaternion.identity) as GameObject;
+            }
+
             enemySpawned.GetComponent<EnemyManager>().gameManager = GetComponent<GameManager>();
             enemiesAlive++;
         }

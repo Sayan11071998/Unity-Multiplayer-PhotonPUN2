@@ -1369,6 +1369,7 @@ MonoBehaviour:
   roundsSurvived: {fileID: 6190211694285127590}
   enemiesAlive: 0
   round: 0
+  photonView: {fileID: 8048215756698126331}
 --- !u!1 &1525536443678827549
 GameObject:
   m_ObjectHideFlags: 0

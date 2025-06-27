@@ -21,13 +21,14 @@ public class EnemyManager : MonoBehaviour
     public float howMuchEarlierStartAttackAnim;
     public float delayBetweenAttacks;
 
+    private GameObject[] playersUInScene;
     private NavMeshAgent navMeshAgent;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player");
+        playersUInScene = GameObject.FindGameObjectsWithTag("Player");
 
         slider.maxValue = health;
         slider.value = health;
@@ -43,14 +44,38 @@ public class EnemyManager : MonoBehaviour
 
         if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient) return;
 
-        slider.gameObject.transform.LookAt(player.transform.position);
+        GetClosestPlayer();
 
-        navMeshAgent.destination = player.transform.position;
+        if (player != null)
+        {
+            slider.gameObject.transform.LookAt(player.transform.position);
+            navMeshAgent.destination = player.transform.position;
+        }
 
         if (navMeshAgent.velocity.magnitude > 1)
             enemyAnimator.SetBool("isRunning", true);
         else
             enemyAnimator.SetBool("isRunning", false);
+    }
+
+    private void GetClosestPlayer()
+    {
+        float minDistance = Mathf.Infinity;
+        Vector3 currPosition = transform.position;
+
+        foreach (GameObject thisPlayer in playersUInScene)
+        {
+            if (thisPlayer != null)
+            {
+                float distance = Vector3.Distance(thisPlayer.transform.position, currPosition);
+
+                if (distance < minDistance)
+                {
+                    player = thisPlayer;
+                    minDistance = distance;
+                }
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -2,8 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+using NUnit.Framework;
+using System.Security.Policy;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     public GameObject[] spawnPoints;
     public GameObject enemyPrefab;
@@ -30,7 +35,17 @@ public class GameManager : MonoBehaviour
             {
                 round++;
                 NextWave(round);
-                roundNumber.text = round.ToString();
+
+                if (PhotonNetwork.InRoom)
+                {
+                    Hashtable hash = new Hashtable();
+                    hash.Add("CurrentRound", round);
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+                }
+                else
+                {
+                    DisplayNextRound(round);
+                }
             }
         }
 
@@ -41,6 +56,11 @@ public class GameManager : MonoBehaviour
             else
                 Continue();
         }
+    }
+
+    private void DisplayNextRound(int round)
+    {
+        roundNumber.text = round.ToString();
     }
 
     public void NextWave(int round)
@@ -104,5 +124,18 @@ public class GameManager : MonoBehaviour
     {
         AudioListener.volume = 1;
         SceneManager.LoadScene(0);
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        Debug.Log("Player properties updated for: " + targetPlayer.NickName + " with changes: " + changedProps.ToStringFull());
+
+        if (photonView.IsMine)
+        {
+            if (changedProps["CurrentRound"] != null)
+            {
+                DisplayNextRound((int)changedProps["CurrentRound"]);
+            }
+        }
     }
 }

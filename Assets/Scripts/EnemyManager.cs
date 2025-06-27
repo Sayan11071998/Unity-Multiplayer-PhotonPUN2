@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -39,6 +40,8 @@ public class EnemyManager : MonoBehaviour
             audioSource.clip = zombieSounds[Random.Range(0, zombieSounds.Length)];
             audioSource.Play();
         }
+
+        if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient) return;
 
         slider.gameObject.transform.LookAt(player.transform.position);
 

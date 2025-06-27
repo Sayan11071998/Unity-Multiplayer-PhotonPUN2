@@ -3,10 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
-using ExitGames.Client.Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using NUnit.Framework;
-using System.Security.Policy;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -86,7 +83,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void EndGame()
     {
-        Time.timeScale = 0;
+        if (!PhotonNetwork.InRoom)
+            Time.timeScale = 0;
+
         Cursor.lockState = CursorLockMode.None;
         endScreen.SetActive(true);
         roundsSurvived.text = round.ToString();
@@ -94,7 +93,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void Restart()
     {
-        Time.timeScale = 1;
+        if (!PhotonNetwork.InRoom)
+            Time.timeScale = 1;
+
         SceneManager.LoadScene(1);
     }
 
@@ -102,7 +103,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Cursor.lockState = CursorLockMode.None;
         AudioListener.volume = 0;
-        Time.timeScale = 0;
+
+        if (!PhotonNetwork.InRoom)
+            Time.timeScale = 0;
+
         pauseMenu.SetActive(true);
     }
 
@@ -110,13 +114,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Cursor.lockState = CursorLockMode.Locked;
         AudioListener.volume = 1;
-        Time.timeScale = 1;
+
+        if (!PhotonNetwork.InRoom)
+            Time.timeScale = 1;
+
         pauseMenu.SetActive(false);
     }
 
     public void BackToMainMenu()
     {
-        Time.timeScale = 1;
+        if (!PhotonNetwork.InRoom)
+            Time.timeScale = 1;
+
         Invoke("LoadMainMenuScene", 0.4f);
     }
 

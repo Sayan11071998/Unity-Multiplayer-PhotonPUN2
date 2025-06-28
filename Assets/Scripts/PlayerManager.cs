@@ -42,7 +42,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         if (hurtPanel.alpha > 0)
-                hurtPanel.alpha -= Time.deltaTime;
+            hurtPanel.alpha -= Time.deltaTime;
 
         if (shakeTime < shakeDuration)
         {
@@ -62,18 +62,34 @@ public class PlayerManager : MonoBehaviour
 
     public void Hit(float damage)
     {
-        health -= damage;
-        healthNumber.text = health.ToString();
-
-        if (health <= 0)
+        if (PhotonNetwork.InRoom)
         {
-            gameManager.EndGame();
+            photonView.RPC("PlayerTakeDamage", RpcTarget.All, damage, photonView.ViewID);
         }
         else
         {
-            shakeTime = 0;
-            shakeDuration = 0.2f;
-            hurtPanel.alpha = 1;
+            PlayerTakeDamage(damage, photonView.ViewID);
+        }
+    }
+
+    [PunRPC]
+    public void PlayerTakeDamage(float damage, int viewID)
+    {
+        if (photonView.ViewID == viewID)
+        {
+            health -= damage;
+            healthNumber.text = health.ToString();
+
+            if (health <= 0)
+            {
+                gameManager.EndGame();
+            }
+            else
+            {
+                shakeTime = 0;
+                shakeDuration = 0.2f;
+                hurtPanel.alpha = 1;
+            }
         }
     }
 

@@ -21,6 +21,8 @@ public class EnemyManager : MonoBehaviour
     public float howMuchEarlierStartAttackAnim;
     public float delayBetweenAttacks;
 
+    public PhotonView photonView;
+
     private GameObject[] playersUInScene;
     private NavMeshAgent navMeshAgent;
 
@@ -110,17 +112,29 @@ public class EnemyManager : MonoBehaviour
 
     public void Hit(float damage)
     {
-        health -= damage;
-        slider.value = health;
-        if (health <= 0)
+        photonView.RPC("TakeDamage", RpcTarget.All, damage, photonView.ViewID);
+    }
+
+    [PunRPC]
+    public void TakeDamage(float damage, int ViewID)
+    {
+        if (photonView.ViewID == ViewID)
         {
-            enemyAnimator.SetTrigger("isDead");
-            Destroy(gameObject, 10f);
-            gameManager.enemiesAlive--;
-            slider.gameObject.SetActive(false);
-            Destroy(navMeshAgent);
-            Destroy(this);
-            Destroy(GetComponent<CapsuleCollider>());
+            health -= damage;
+            slider.value = health;
+            if (health <= 0)
+            {
+                enemyAnimator.SetTrigger("isDead");
+                Destroy(gameObject, 10f);
+
+                if (!PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient && photonView.IsMine)
+                    gameManager.enemiesAlive--;
+
+                slider.gameObject.SetActive(false);
+                Destroy(navMeshAgent);
+                Destroy(this);
+                Destroy(GetComponent<CapsuleCollider>());
+            }
         }
     }
 }

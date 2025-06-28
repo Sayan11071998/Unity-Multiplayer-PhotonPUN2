@@ -2019,6 +2019,7 @@ MonoBehaviour:
   playerInReach: 0
   howMuchEarlierStartAttackAnim: 0.5
   delayBetweenAttacks: 1
+  photonView: {fileID: 8074417079804288570}
 --- !u!114 &8074417079804288570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2039,6 +2040,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 5536533869881511980}
+  - {fileID: 3730428412414442641}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

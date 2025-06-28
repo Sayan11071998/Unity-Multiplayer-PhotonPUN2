@@ -135,4 +135,10 @@ public class PlayerManager : MonoBehaviourPunCallbacks
             weaponSwitch((int)changedProps["weaponIndex"]);
         }
     }
+
+    [PunRPC]
+    public void WeaponShootVFX(int viewID)
+    {
+        activeWeapon.GetComponent<WeaponManager>().ShootVFX(viewID);
+    }
 }

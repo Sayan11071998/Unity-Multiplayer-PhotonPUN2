@@ -119,8 +119,15 @@ public class WeaponManager : MonoBehaviour
         currentAmmo--;
         currentAmmoText.text = currentAmmo.ToString();
 
-        muzzleFlash.Play();
-        audioSource.PlayOneShot(gunshot, 1f);
+        if (PhotonNetwork.InRoom)
+        {
+            photonView.RPC("WeaponShootVFX", RpcTarget.All, photonView.ViewID);
+        }
+        else
+        {
+            ShootVFX(photonView.ViewID);
+        }
+
         playerAnimator.SetBool("isShooting", true);
 
         RaycastHit hit;
@@ -142,6 +149,15 @@ public class WeaponManager : MonoBehaviour
                 GameObject InstParticles = Instantiate(nonTargetHitParticles, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(InstParticles, 20f);
             }
+        }
+    }
+
+    public void ShootVFX(int viewID)
+    {
+        if (photonView.ViewID == viewID)
+        {
+            muzzleFlash.Play();
+            audioSource.PlayOneShot(gunshot, 1f);
         }
     }
 

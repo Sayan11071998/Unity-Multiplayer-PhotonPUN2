@@ -1,8 +1,10 @@
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Photon.Realtime;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviourPunCallbacks
 {
     public GameManager gameManager;
     public GameObject playerCamera;
@@ -117,5 +119,20 @@ public class PlayerManager : MonoBehaviour
             index++;
         }
         activeWeaponIndex = weaponIndex;
+
+        if (photonView.IsMine)
+        {
+            Hashtable hash = new Hashtable();
+            hash.Add("weaponIndex", weaponIndex);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        }
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if (!photonView.IsMine && targetPlayer == photonView.Owner && changedProps["weaponIndex"] != null)
+        {
+            weaponSwitch((int)changedProps["weaponIndex"]);
+        }
     }
 }

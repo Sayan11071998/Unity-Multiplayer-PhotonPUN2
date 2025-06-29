@@ -18,9 +18,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(Instance);
     }
 
-    private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
+    private new void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
 
-    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+    private new void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {

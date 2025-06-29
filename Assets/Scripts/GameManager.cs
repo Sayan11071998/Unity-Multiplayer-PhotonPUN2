@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public int enemiesAlive = 0;
     [SerializeField] private int round = 0;
 
-    [SerializeField] private PhotonView photonView;
+    [SerializeField] private new PhotonView photonView;
 
     private void Start() => spawnPoints = GameObject.FindGameObjectsWithTag("Spawners");
 

@@ -17,7 +17,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     public float healthCap;
     public float health = 100;
 
-    [SerializeField] private PhotonView photonView;
+    [SerializeField] private new PhotonView photonView;
 
     private Quaternion playerCameraOriginalRotation;
     private GameObject activeWeapon;

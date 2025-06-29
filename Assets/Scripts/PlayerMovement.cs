@@ -1,24 +1,29 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public CharacterController controller;
-    public Transform groundCheck;
-    public LayerMask groundMask;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
 
-    public float walkSpeed = 5f;
-    public float sprintSpeed = 10f;
-    public float gravity = -9.81f;
-    public float groundDistance = 0.4f;
-    public float jumpHeight = 2f;
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float sprintSpeed = 10f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private float jumpHeight = 2f;
 
-    public bool isGrounded;
+    [SerializeField] private bool isGrounded;
+
+    [SerializeField] private PhotonView photonView;
 
     private float speed = 12f;
     private Vector3 velocity;
 
     private void Update()
     {
+        if (PhotonNetwork.InRoom && !photonView.IsMine) return;
+
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)

@@ -1,10 +1,14 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class WeaponSway : MonoBehaviour
 {
     public float swaySensitivity = 2f;
-    public float swayClamp = 20f;
-    public float swaySmoothness = 20f;
+    
+    [SerializeField] private float swayClamp = 20f;
+    [SerializeField] private float swaySmoothness = 20f;
+
+    [SerializeField] private PhotonView photonView;
 
     private Vector3 startPosition;
     private Vector3 nextPosition;
@@ -14,6 +18,8 @@ public class WeaponSway : MonoBehaviour
 
     private void Update()
     {
+        if (photonView != null && !photonView.IsMine) return;
+
         float mouseX = Input.GetAxis("Mouse X") * swaySensitivity / 100 * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * swaySensitivity / 100 * Time.deltaTime;
 

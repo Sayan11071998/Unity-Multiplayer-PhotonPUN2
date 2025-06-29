@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
-    public Text priceNumber;
-    public Text priceText;
+    [SerializeField] private Text priceNumber;
+    [SerializeField] private Text priceText;
 
-    public int price = 50;
+    [SerializeField] private int price = 50;
 
-    public bool HealthStation;
-    public bool ammoStation;
+    [SerializeField] private bool HealthStation;
+    [SerializeField] private bool ammoStation;
 
     private PlayerManager playerManager;
     private bool playerIsInReach = false;

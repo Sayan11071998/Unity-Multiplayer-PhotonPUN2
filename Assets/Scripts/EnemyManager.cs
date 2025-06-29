@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -5,28 +6,35 @@ using UnityEngine.UI;
 public class EnemyManager : MonoBehaviour
 {
     public GameManager gameManager;
-    public GameObject player;
-    public Animator enemyAnimator;
-    public Slider slider;
-    public AudioClip[] zombieSounds;
-    public AudioSource audioSource;
 
-    public float damage = 20f;
-    public float health = 100;
-    public int points = 20;
+    [SerializeField] private GameObject player;
+    [SerializeField] private Animator enemyAnimator;
+    [SerializeField] private Slider slider;
+    [SerializeField] private AudioClip[] zombieSounds;
+    [SerializeField] private AudioSource audioSource;
 
-    public bool playerInReach;
-    private float attackDelayTimer;
-    public float howMuchEarlierStartAttackAnim;
-    public float delayBetweenAttacks;
+    [SerializeField] private float damage = 20f;
+    [SerializeField] private float health = 100;
+    [SerializeField] private int points = 20;
 
+    [SerializeField] private bool playerInReach;
+    [SerializeField] private float attackDelayTimer;
+    [SerializeField] private float howMuchEarlierStartAttackAnim;
+    [SerializeField] private float delayBetweenAttacks;
+
+    [SerializeField] private PhotonView photonView;
+
+    private GameObject[] playersUInScene;
     private NavMeshAgent navMeshAgent;
+
+    public float Health => health;
+    public float Points => points;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player");
+        playersUInScene = GameObject.FindGameObjectsWithTag("Player");
 
         slider.maxValue = health;
         slider.value = health;
@@ -40,14 +48,40 @@ public class EnemyManager : MonoBehaviour
             audioSource.Play();
         }
 
-        slider.gameObject.transform.LookAt(player.transform.position);
+        if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient) return;
 
-        navMeshAgent.destination = player.transform.position;
+        GetClosestPlayer();
+
+        if (player != null)
+        {
+            slider.gameObject.transform.LookAt(player.transform.position);
+            navMeshAgent.destination = player.transform.position;
+        }
 
         if (navMeshAgent.velocity.magnitude > 1)
             enemyAnimator.SetBool("isRunning", true);
         else
             enemyAnimator.SetBool("isRunning", false);
+    }
+
+    private void GetClosestPlayer()
+    {
+        float minDistance = Mathf.Infinity;
+        Vector3 currPosition = transform.position;
+
+        foreach (GameObject thisPlayer in playersUInScene)
+        {
+            if (thisPlayer != null)
+            {
+                float distance = Vector3.Distance(thisPlayer.transform.position, currPosition);
+
+                if (distance < minDistance)
+                {
+                    player = thisPlayer;
+                    minDistance = distance;
+                }
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -82,17 +116,29 @@ public class EnemyManager : MonoBehaviour
 
     public void Hit(float damage)
     {
-        health -= damage;
-        slider.value = health;
-        if (health <= 0)
+        photonView.RPC("TakeDamage", RpcTarget.All, damage, photonView.ViewID);
+    }
+
+    [PunRPC]
+    public void TakeDamage(float damage, int ViewID)
+    {
+        if (photonView.ViewID == ViewID)
         {
-            enemyAnimator.SetTrigger("isDead");
-            Destroy(gameObject, 10f);
-            gameManager.enemiesAlive--;
-            slider.gameObject.SetActive(false);
-            Destroy(navMeshAgent);
-            Destroy(this);
-            Destroy(GetComponent<CapsuleCollider>());
+            health -= damage;
+            slider.value = health;
+            if (health <= 0)
+            {
+                enemyAnimator.SetTrigger("isDead");
+                Destroy(gameObject, 10f);
+
+                if (!PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient && photonView.IsMine)
+                    gameManager.enemiesAlive--;
+
+                slider.gameObject.SetActive(false);
+                Destroy(navMeshAgent);
+                Destroy(this);
+                Destroy(GetComponent<CapsuleCollider>());
+            }
         }
     }
 }

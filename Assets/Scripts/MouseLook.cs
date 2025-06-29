@@ -1,10 +1,11 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    public Transform playerBody;
-
-    public float mouseSensitivity = 100f;
+    [SerializeField] private Transform playerBody;
+    [SerializeField] private float mouseSensitivity = 100f;
+    [SerializeField] private PhotonView photonView;
 
     private float xRotation = 0f;
 
@@ -12,6 +13,8 @@ public class MouseLook : MonoBehaviour
 
     private void Update()
     {
+        if (PhotonNetwork.InRoom && !photonView.IsMine) return;
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 

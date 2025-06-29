@@ -355,10 +355,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 3454827096024434456}
   playerCamera: {fileID: 7775734348428989139}
-  weaponHolder: {fileID: 850815844591069070}
-  healthNumber: {fileID: 3300002278112760467}
   pointsNumber: {fileID: 3521812831911379958}
   hurtPanel: {fileID: 869889651645809136}
+  weaponHolder: {fileID: 850815844591069070}
+  healthNumber: {fileID: 3300002278112760467}
   currentPoints: 0
   healthCap: 0
   health: 100

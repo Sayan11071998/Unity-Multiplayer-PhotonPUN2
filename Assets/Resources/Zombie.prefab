@@ -2017,6 +2017,7 @@ MonoBehaviour:
   health: 100
   points: 20
   playerInReach: 0
+  attackDelayTimer: 0
   howMuchEarlierStartAttackAnim: 0.5
   delayBetweenAttacks: 1
   photonView: {fileID: 8074417079804288570}

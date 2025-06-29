@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 267004383}
   - component: {fileID: 267004382}
   m_Layer: 5
-  m_Name: Start (1)
+  m_Name: Connecting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

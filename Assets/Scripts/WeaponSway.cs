@@ -4,10 +4,11 @@ using UnityEngine;
 public class WeaponSway : MonoBehaviour
 {
     public float swaySensitivity = 2f;
-    public float swayClamp = 20f;
-    public float swaySmoothness = 20f;
+    
+    [SerializeField] private float swayClamp = 20f;
+    [SerializeField] private float swaySmoothness = 20f;
 
-    public PhotonView photonView;
+    [SerializeField] private PhotonView photonView;
 
     private Vector3 startPosition;
     private Vector3 nextPosition;

@@ -6,18 +6,18 @@ using Photon.Realtime;
 
 public class PlayerManager : MonoBehaviourPunCallbacks
 {
-    public GameManager gameManager;
-    public GameObject playerCamera;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private GameObject playerCamera;
+    [SerializeField] private Text pointsNumber;
+    [SerializeField] private CanvasGroup hurtPanel;
+
     public GameObject weaponHolder;
     public Text healthNumber;
-    public Text pointsNumber;
-    public CanvasGroup hurtPanel;
-
     public float currentPoints;
     public float healthCap;
     public float health = 100;
 
-    public PhotonView photonView;
+    [SerializeField] private PhotonView photonView;
 
     private Quaternion playerCameraOriginalRotation;
     private GameObject activeWeapon;
@@ -65,13 +65,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     public void Hit(float damage)
     {
         if (PhotonNetwork.InRoom)
-        {
             photonView.RPC("PlayerTakeDamage", RpcTarget.All, damage, photonView.ViewID);
-        }
         else
-        {
             PlayerTakeDamage(damage, photonView.ViewID);
-        }
     }
 
     [PunRPC]
@@ -131,14 +127,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         if (!photonView.IsMine && targetPlayer == photonView.Owner && changedProps["weaponIndex"] != null)
-        {
             weaponSwitch((int)changedProps["weaponIndex"]);
-        }
     }
 
     [PunRPC]
-    public void WeaponShootVFX(int viewID)
-    {
-        activeWeapon.GetComponent<WeaponManager>().ShootVFX(viewID);
-    }
+    public void WeaponShootVFX(int viewID) => activeWeapon.GetComponent<WeaponManager>().ShootVFX(viewID);
 }

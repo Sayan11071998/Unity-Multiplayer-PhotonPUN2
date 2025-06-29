@@ -7,22 +7,19 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public GameObject[] spawnPoints;
-    public GameObject enemyPrefab;
-    public GameObject endScreen;
-    public GameObject pauseMenu;
-    public Text roundNumber;
-    public Text roundsSurvived;
+    [SerializeField] private GameObject[] spawnPoints;
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject endScreen;
+    [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private Text roundNumber;
+    [SerializeField] private Text roundsSurvived;
 
     public int enemiesAlive = 0;
-    public int round = 0;
+    [SerializeField] private int round = 0;
 
-    public PhotonView photonView;
+    [SerializeField] private PhotonView photonView;
 
-    private void Start()
-    {
-        spawnPoints = GameObject.FindGameObjectsWithTag("Spawners");
-    }
+    private void Start() => spawnPoints = GameObject.FindGameObjectsWithTag("Spawners");
 
     private void Update()
     {
@@ -55,10 +52,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private void DisplayNextRound(int round)
-    {
-        roundNumber.text = round.ToString();
-    }
+    private void DisplayNextRound(int round) => roundNumber.text = round.ToString();
 
     public void NextWave(int round)
     {
@@ -68,13 +62,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             GameObject enemySpawned;
 
             if (PhotonNetwork.InRoom)
-            {
                 enemySpawned = PhotonNetwork.Instantiate("Zombie", spawnPoint.transform.position, Quaternion.identity);
-            }
             else
-            {
                 enemySpawned = Instantiate(Resources.Load("Zombie"), spawnPoint.transform.position, Quaternion.identity) as GameObject;
-            }
 
             enemySpawned.GetComponent<EnemyManager>().gameManager = GetComponent<GameManager>();
             enemiesAlive++;
@@ -137,14 +127,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        Debug.Log("Player properties updated for: " + targetPlayer.NickName + " with changes: " + changedProps.ToStringFull());
-
         if (photonView.IsMine)
         {
             if (changedProps["CurrentRound"] != null)
-            {
                 DisplayNextRound((int)changedProps["CurrentRound"]);
-            }
         }
     }
 }

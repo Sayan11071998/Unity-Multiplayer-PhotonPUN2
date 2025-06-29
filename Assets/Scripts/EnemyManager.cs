@@ -6,25 +6,29 @@ using UnityEngine.UI;
 public class EnemyManager : MonoBehaviour
 {
     public GameManager gameManager;
-    public GameObject player;
-    public Animator enemyAnimator;
-    public Slider slider;
-    public AudioClip[] zombieSounds;
-    public AudioSource audioSource;
 
-    public float damage = 20f;
-    public float health = 100;
-    public int points = 20;
+    [SerializeField] private GameObject player;
+    [SerializeField] private Animator enemyAnimator;
+    [SerializeField] private Slider slider;
+    [SerializeField] private AudioClip[] zombieSounds;
+    [SerializeField] private AudioSource audioSource;
 
-    public bool playerInReach;
-    private float attackDelayTimer;
-    public float howMuchEarlierStartAttackAnim;
-    public float delayBetweenAttacks;
+    [SerializeField] private float damage = 20f;
+    [SerializeField] private float health = 100;
+    [SerializeField] private int points = 20;
 
-    public PhotonView photonView;
+    [SerializeField] private bool playerInReach;
+    [SerializeField] private float attackDelayTimer;
+    [SerializeField] private float howMuchEarlierStartAttackAnim;
+    [SerializeField] private float delayBetweenAttacks;
+
+    [SerializeField] private PhotonView photonView;
 
     private GameObject[] playersUInScene;
     private NavMeshAgent navMeshAgent;
+
+    public float Health => health;
+    public float Points => points;
 
     private void Start()
     {

@@ -3,11 +3,9 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    public Transform playerBody;
-
-    public float mouseSensitivity = 100f;
-
-    public PhotonView photonView;
+    [SerializeField] private Transform playerBody;
+    [SerializeField] private float mouseSensitivity = 100f;
+    [SerializeField] private PhotonView photonView;
 
     private float xRotation = 0f;
 

@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class TouchPlayerMovement : MonoBehaviour
 {
-    public CharacterController controller;
-    public Transform groundCheck;
-    public Transform characterCamera;
-    public LayerMask groundMask;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private Transform characterCamera;
+    [SerializeField] private LayerMask groundMask;
 
-    public float speed = 12f;
-    public float groundDistance = 0.4f;
-    public float jumpHeight = 2f;
-    public float gravity = -9.81f;
-    public float cameraSensitivity = 0.1f;
+    [SerializeField] private float speed = 12f;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private float jumpHeight = 2f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float cameraSensitivity = 0.1f;
 
-    public bool isGrounded;
+    [SerializeField] private bool isGrounded;
 
     private Vector3 velocity;
 

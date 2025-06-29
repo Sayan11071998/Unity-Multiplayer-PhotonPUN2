@@ -5,17 +5,18 @@ using UnityEngine.UI;
 
 public class WeaponManager : MonoBehaviour
 {
-    public PlayerManager playerManager;
-    public GameObject playerCam;
-    public GameObject crosshair;
-    public GameObject hitParticles;
-    public GameObject nonTargetHitParticles;
-    public Animator playerAnimator;
-    public ParticleSystem muzzleFlash;
-    public AudioClip gunshot;
-    public AudioSource audioSource;
-    public WeaponSway weaponSway;
-    public Text currentAmmoText;
+    [SerializeField] private PlayerManager playerManager;
+    [SerializeField] private GameObject playerCam;
+    [SerializeField] private GameObject crosshair;
+    [SerializeField] private GameObject hitParticles;
+    [SerializeField] private GameObject nonTargetHitParticles;
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private AudioClip gunshot;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private WeaponSway weaponSway;
+    [SerializeField] private Text currentAmmoText;
+
     public Text reserveAmmoText;
 
     public float currentAmmo;
@@ -28,11 +29,11 @@ public class WeaponManager : MonoBehaviour
     public int range = 100;
     public int damage = 25;
 
-    public bool isAutomatic;
+    [SerializeField] private bool isAutomatic;
 
-    public string weaponType;
+    [SerializeField] private string weaponType;
 
-    public PhotonView photonView;
+    [SerializeField] private PhotonView photonView;
 
     private float swaySensitivity;
     private float firerateTimer = 0;
@@ -120,13 +121,9 @@ public class WeaponManager : MonoBehaviour
         currentAmmoText.text = currentAmmo.ToString();
 
         if (PhotonNetwork.InRoom)
-        {
             photonView.RPC("WeaponShootVFX", RpcTarget.All, photonView.ViewID);
-        }
         else
-        {
             ShootVFX(photonView.ViewID);
-        }
 
         playerAnimator.SetBool("isShooting", true);
 
@@ -137,8 +134,8 @@ public class WeaponManager : MonoBehaviour
             if (enemyManager != null)
             {
                 enemyManager.Hit(damage);
-                if (enemyManager.health <= 0)
-                    playerManager.currentPoints += enemyManager.points;
+                if (enemyManager.Health <= 0)
+                    playerManager.currentPoints += enemyManager.Points;
 
                 GameObject InstParticles = Instantiate(hitParticles, hit.point, Quaternion.LookRotation(hit.normal));
                 InstParticles.transform.parent = hit.transform;
@@ -192,6 +189,7 @@ public class WeaponManager : MonoBehaviour
             currentAmmoText.text = currentAmmo.ToString();
             reserveAmmoText.text = reserveAmmo.ToString();
         }
+
         isReloading = false;
     }
 }

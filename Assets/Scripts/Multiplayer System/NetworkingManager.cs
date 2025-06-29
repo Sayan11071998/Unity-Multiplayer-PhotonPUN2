@@ -4,38 +4,22 @@ using Photon.Realtime;
 
 public class NetworkingManager : MonoBehaviourPunCallbacks
 {
-    public GameObject connecting;
-    public GameObject multiplayer;
+    [SerializeField] private GameObject connecting;
+    [SerializeField] private GameObject multiplayer;
 
-    private void Start()
-    {
-        Debug.Log("Connecting to Server...");
-        PhotonNetwork.ConnectUsingSettings();
-    }
+    private void Start() => PhotonNetwork.ConnectUsingSettings();
 
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("Joining Lobby...");
-        PhotonNetwork.JoinLobby();
-    }
+    public override void OnConnectedToMaster() => PhotonNetwork.JoinLobby();
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("Ready for Multiplayer...");
         connecting.SetActive(false);
         multiplayer.SetActive(true);
     }
 
-    public void FindMatch()
-    {
-        Debug.Log("Finding Room...");
-        PhotonNetwork.JoinRandomRoom();
-    }
+    public void FindMatch() => PhotonNetwork.JoinRandomRoom();
 
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        MakeRoom();
-    }
+    public override void OnJoinRandomFailed(short returnCode, string message) => MakeRoom();
 
     private void MakeRoom()
     {
@@ -50,12 +34,7 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
         };
 
         PhotonNetwork.CreateRoom("RoomName_" + randomRoomName, roomOptions);
-        Debug.Log("Room Created..." + randomRoomName);
     }
 
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("Loading Scene 1....");
-        PhotonNetwork.LoadLevel(2);
-    }
+    public override void OnJoinedRoom() => PhotonNetwork.LoadLevel(2);
 }

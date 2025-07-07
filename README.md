@@ -50,3 +50,6 @@ The codebase follows Unity best practices with modular, single-responsibility co
 This project demonstrates advanced understanding of networked game development with proper authority distribution, efficient synchronization mechanisms, and robust handling of connection states. The implementation showcases expertise in Unity's core systems including NavMesh AI, Coroutines, Animation systems, and Photon PUN 2 integration.
 
 The modular architecture and cross-platform compatibility reflect strong software engineering principles, making the codebase maintainable and easily extensible for future features and content updates.
+
+## **Play Link**
+- https://sayannandi.itch.io/unity-multiplayer-photonpun2

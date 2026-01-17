@@ -37,8 +37,7 @@ flowchart LR
 
 * ### Photon Master Client Authority
     - Only the Master Client spawns enemies and manages wave progression to prevent duplicate spawns. When GameManager detects `enemiesAlive == 0`, it increments the round counter and calls `NextWave()`, which loops round times to spawn enemies at random spawn points. The Master Client uses `PhotonNetwork.Instantiate()` instead of Unity's `Instantiate()` - this automatically replicates the GameObject across all clients with synchronized transforms and PhotonView components.
-
-The tricky part was synchronizing round numbers. When the Master Client updates the round, it stores the value in Custom Properties using `PhotonNetwork.LocalPlayer.SetCustomProperties()`. All other clients receive `OnPlayerPropertiesUpdate()` callbacks and update their UI accordingly. This ensured the round counter stayed synchronized even if players joined mid-game.
+    - The tricky part was synchronizing round numbers. When the Master Client updates the round, it stores the value in Custom Properties using `PhotonNetwork.LocalPlayer.SetCustomProperties()`. All other clients receive `OnPlayerPropertiesUpdate()` callbacks and update their UI accordingly. This ensured the round counter stayed synchronized even if players joined mid-game.
 
 ```csharp
 // GameManager.cs - Master Client spawns, all clients display
@@ -56,11 +55,9 @@ if (!PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient && photonView.IsMine)
 }
 ```
 
-### RPC System for Damage Synchronization
-
-When a player shoots an enemy, the hit detection happens locally on the shooter's client (to minimize input lag), but damage must apply across all clients. I used RPCs with ViewID matching to solve this. The shooter calls `enemyManager.Hit(damage)`, which triggers an RPC broadcast to `RpcTarget.All`. Each client receives `TakeDamage()` and checks if `photonView.ViewID` matches - only the correct enemy instance processes the damage.
-
-The same pattern applies to player damage. When an enemy collides with a player, it calls `PlayerManager.Hit()` which broadcasts `PlayerTakeDamage` RPC. This kept health values synchronized without constant network updates - damage only syncs on impact events.
+* ### RPC System for Damage Synchronization
+    - When a player shoots an enemy, the hit detection happens locally on the shooter's client (to minimize input lag), but damage must apply across all clients. I used RPCs with ViewID matching to solve this. The shooter calls `enemyManager.Hit(damage)`, which triggers an RPC broadcast to `RpcTarget.All`. Each client receives `TakeDamage()` and checks if `photonView.ViewID` matches - only the correct enemy instance processes the damage.
+    - The same pattern applies to player damage. When an enemy collides with a player, it calls `PlayerManager.Hit()` which broadcasts `PlayerTakeDamage` RPC. This kept health values synchronized without constant network updates - damage only syncs on impact events.
 
 ```csharp
 // EnemyManager.cs - RPC ensures all clients see damage
@@ -86,29 +83,21 @@ public void TakeDamage(float damage, int ViewID)
 }
 ```
 
-### Weapon System with Visual Sync
+* ### Weapon System with Visual Sync
+    - Weapon firing has two phases: gameplay (raycasting, damage) and visuals (muzzle flash, audio). The shooter's client handles raycasting locally for instant feedback, but the muzzle flash and sound must play on all clients. When a player fires, `WeaponManager.Shoot()` calculates the raycast hit, applies damage, then calls `photonView.RPC("WeaponShootVFX")` to broadcast visual effects.
+    - I separated the RPC call from the damage logic to avoid sending redundant data. The RPC only transmits the `photonView.ViewID` - each client's WeaponManager receives this and checks if it matches its own ViewID before playing the ParticleSystem and AudioClip. This reduced network traffic while maintaining visual synchronization.
 
-Weapon firing has two phases: gameplay (raycasting, damage) and visuals (muzzle flash, audio). The shooter's client handles raycasting locally for instant feedback, but the muzzle flash and sound must play on all clients. When a player fires, `WeaponManager.Shoot()` calculates the raycast hit, applies damage, then calls `photonView.RPC("WeaponShootVFX")` to broadcast visual effects.
+* ### Custom Properties for Weapon Switching
+    - Players can switch weapons mid-game, and this must replicate to other clients so they see the correct weapon model. I used Custom Properties instead of RPCs because weapon switching doesn't need guaranteed delivery - if a packet drops, the next switch will overwrite it anyway. When `PlayerManager.weaponSwitch()` runs, it stores the weaponIndex in the player's Custom Properties.
+    - Remote clients receive `OnPlayerPropertiesUpdate()` and check if the changedProps contains "weaponIndex". If the property belongs to another player (`!photonView.IsMine`), they call `weaponSwitch()` to toggle the correct child GameObject. This approach automatically handles late-joining players since Custom Properties persist in the room.
 
-I separated the RPC call from the damage logic to avoid sending redundant data. The RPC only transmits the `photonView.ViewID` - each client's WeaponManager receives this and checks if it matches its own ViewID before playing the ParticleSystem and AudioClip. This reduced network traffic while maintaining visual synchronization.
+* ### Enemy AI with Master Client Pathfinding
+    - Enemies use NavMeshAgent for pathfinding, but only the Master Client calculates paths. Each enemy's `EnemyManager.Update()` checks `PhotonNetwork.IsMasterClient` before updating `navMeshAgent.destination`. Non-master clients skip AI logic entirely - they just receive transform updates from Photon's automatic synchronization.
+    - The challenge was targeting the closest player in multiplayer. `GetClosestPlayer()` loops through all GameObjects tagged "Player" and calculates distances. I stored `playersInScene` in `Start()` using `FindGameObjectsWithTag()`, but players spawn dynamically after scene load. To handle this, I call `FindGameObjectsWithTag()` every time `GetClosestPlayer()` runs, accepting the minor performance cost to ensure accurate targeting when players join/leave.
 
-### Custom Properties for Weapon Switching
-
-Players can switch weapons mid-game, and this must replicate to other clients so they see the correct weapon model. I used Custom Properties instead of RPCs because weapon switching doesn't need guaranteed delivery - if a packet drops, the next switch will overwrite it anyway. When `PlayerManager.weaponSwitch()` runs, it stores the weaponIndex in the player's Custom Properties.
-
-Remote clients receive `OnPlayerPropertiesUpdate()` and check if the changedProps contains "weaponIndex". If the property belongs to another player (`!photonView.IsMine`), they call `weaponSwitch()` to toggle the correct child GameObject. This approach automatically handles late-joining players since Custom Properties persist in the room.
-
-### Enemy AI with Master Client Pathfinding
-
-Enemies use NavMeshAgent for pathfinding, but only the Master Client calculates paths. Each enemy's `EnemyManager.Update()` checks `PhotonNetwork.IsMasterClient` before updating `navMeshAgent.destination`. Non-master clients skip AI logic entirely - they just receive transform updates from Photon's automatic synchronization.
-
-The challenge was targeting the closest player in multiplayer. `GetClosestPlayer()` loops through all GameObjects tagged "Player" and calculates distances. I stored `playersInScene` in `Start()` using `FindGameObjectsWithTag()`, but players spawn dynamically after scene load. To handle this, I call `FindGameObjectsWithTag()` every time `GetClosestPlayer()` runs, accepting the minor performance cost to ensure accurate targeting when players join/leave.
-
-### Room Management and Scene Persistence
-
-RoomManager uses `DontDestroyOnLoad()` to persist across scene transitions. It subscribes to `SceneManager.sceneLoaded` and spawns the player prefab when the game scene loads. The spawn position randomizes between -3 and 3 on X/Z axes to prevent players from spawning inside each other.
-
-The singleton pattern here had a bug - I initially used `if (Instance) Destroy(Instance)`, which destroys the new instance instead of the old one. This caused multiple RoomManagers to exist across scenes. I fixed it by destroying `gameObject` instead of `Instance`, but the proper solution would be `Destroy(gameObject); return;` to prevent further execution.
+* ### Room Management and Scene Persistence
+    - RoomManager uses `DontDestroyOnLoad()` to persist across scene transitions. It subscribes to `SceneManager.sceneLoaded` and spawns the player prefab when the game scene loads. The spawn position randomizes between -3 and 3 on X/Z axes to prevent players from spawning inside each other.
+    - The singleton pattern here had a bug - I initially used `if (Instance) Destroy(Instance)`, which destroys the new instance instead of the old one. This caused multiple RoomManagers to exist across scenes. I fixed it by destroying `gameObject` instead of `Instance`, but the proper solution would be `Destroy(gameObject); return;` to prevent further execution.
 
 ---
 

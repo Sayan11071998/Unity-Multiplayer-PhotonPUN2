@@ -12,7 +12,7 @@ I structured the multiplayer system around Photon's Master Client pattern - one 
 
 The challenge was handling both single-player and multiplayer modes with the same codebase. Every manager class checks `PhotonNetwork.InRoom` to determine which code path to execute - single-player uses direct method calls while multiplayer uses RPC broadcasts. This eliminated duplicate logic while maintaining deterministic behavior across network conditions.
 
-![Multiplayer Gameplay](multi.png)
+![Image](https://github.com/user-attachments/assets/83cc0213-95bd-49ca-9f86-28b047584ca0)
 
 ---
 

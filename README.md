@@ -115,11 +115,11 @@ The singleton pattern here had a bug - I initially used `if (Instance) Destroy(I
 
 ## Technical Challenges
 
-**Single-Player Compatibility:** Every script needed to handle both networked and local modes. I added `PhotonNetwork.InRoom` checks before all RPC calls and network instantiations. For single-player, I used `Resources.Load()` to spawn prefabs directly instead of `PhotonNetwork.Instantiate()`.
+- **Single-Player Compatibility:** Every script needed to handle both networked and local modes. I added `PhotonNetwork.InRoom` checks before all RPC calls and network instantiations. For single-player, I used `Resources.Load()` to spawn prefabs directly instead of `PhotonNetwork.Instantiate()`.
 
-**Master Client Migration:** If the Master Client disconnects, Photon automatically migrates authority to another client. However, this broke enemy spawning since the new Master Client didn't have the current round value. I solved this by storing round in Custom Properties so the new Master Client could read it and continue wave progression.
+- **Master Client Migration:** If the Master Client disconnects, Photon automatically migrates authority to another client. However, this broke enemy spawning since the new Master Client didn't have the current round value. I solved this by storing round in Custom Properties so the new Master Client could read it and continue wave progression.
 
-**Weapon VFX Timing:** Initially, muzzle flashes played before damage applied, causing visual desync. I restructured `Shoot()` to calculate damage first, then call the VFX RPC. This ensured enemies reacted to damage before the shooter saw the muzzle flash on their end.
+- **Weapon VFX Timing:** Initially, muzzle flashes played before damage applied, causing visual desync. I restructured `Shoot()` to calculate damage first, then call the VFX RPC. This ensured enemies reacted to damage before the shooter saw the muzzle flash on their end.
 
 ---
 

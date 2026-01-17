@@ -35,9 +35,9 @@ flowchart LR
 
 ## Key Technical Systems
 
-### Photon Master Client Authority
+- ### Photon Master Client Authority
 
-Only the Master Client spawns enemies and manages wave progression to prevent duplicate spawns. When GameManager detects `enemiesAlive == 0`, it increments the round counter and calls `NextWave()`, which loops round times to spawn enemies at random spawn points. The Master Client uses `PhotonNetwork.Instantiate()` instead of Unity's `Instantiate()` - this automatically replicates the GameObject across all clients with synchronized transforms and PhotonView components.
+-- Only the Master Client spawns enemies and manages wave progression to prevent duplicate spawns. When GameManager detects `enemiesAlive == 0`, it increments the round counter and calls `NextWave()`, which loops round times to spawn enemies at random spawn points. The Master Client uses `PhotonNetwork.Instantiate()` instead of Unity's `Instantiate()` - this automatically replicates the GameObject across all clients with synchronized transforms and PhotonView components.
 
 The tricky part was synchronizing round numbers. When the Master Client updates the round, it stores the value in Custom Properties using `PhotonNetwork.LocalPlayer.SetCustomProperties()`. All other clients receive `OnPlayerPropertiesUpdate()` callbacks and update their UI accordingly. This ensured the round counter stayed synchronized even if players joined mid-game.
 

@@ -41,7 +41,7 @@ Only the Master Client spawns enemies and manages wave progression to prevent du
 
 The tricky part was synchronizing round numbers. When the Master Client updates the round, it stores the value in Custom Properties using `PhotonNetwork.LocalPlayer.SetCustomProperties()`. All other clients receive `OnPlayerPropertiesUpdate()` callbacks and update their UI accordingly. This ensured the round counter stayed synchronized even if players joined mid-game.
 
-```cpp
+```csharp
 // GameManager.cs - Master Client spawns, all clients display
 if (!PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient && photonView.IsMine)
 {
@@ -63,7 +63,7 @@ When a player shoots an enemy, the hit detection happens locally on the shooter'
 
 The same pattern applies to player damage. When an enemy collides with a player, it calls `PlayerManager.Hit()` which broadcasts `PlayerTakeDamage` RPC. This kept health values synchronized without constant network updates - damage only syncs on impact events.
 
-```cpp
+```csharp
 // EnemyManager.cs - RPC ensures all clients see damage
 public void Hit(float damage)
 {

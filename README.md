@@ -31,8 +31,6 @@ flowchart LR
     O[GameManager Updates] --> P[Sync via RPCs]
 ```
 
-![Image](https://github.com/user-attachments/assets/83cc0213-95bd-49ca-9f86-28b047584ca0)
-
 ---
 
 ## Key Technical Systems

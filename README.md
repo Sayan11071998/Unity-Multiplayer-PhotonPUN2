@@ -46,6 +46,30 @@ When a player shoots an enemy, the hit detection happens locally on the shooter'
 
 The same pattern applies to player damage. When an enemy collides with a player, it calls `PlayerManager.Hit()` which broadcasts `PlayerTakeDamage` RPC. This kept health values synchronized without constant network updates - damage only syncs on impact events.
 
+```cpp
+// EnemyManager.cs - RPC ensures all clients see damage
+public void Hit(float damage)
+{
+    photonView.RPC("TakeDamage", RpcTarget.All, damage, photonView.ViewID);
+}
+
+[PunRPC]
+public void TakeDamage(float damage, int ViewID)
+{
+    if (photonView.ViewID == ViewID)
+    {
+        health -= damage;
+        slider.value = health;
+
+        if (health <= 0)
+        {
+            if (!PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient && photonView.IsMine)
+                gameManager.enemiesAlive--;
+        }
+    }
+}
+```
+
 ### Weapon System with Visual Sync
 
 Weapon firing has two phases: gameplay (raycasting, damage) and visuals (muzzle flash, audio). The shooter's client handles raycasting locally for instant feedback, but the muzzle flash and sound must play on all clients. When a player fires, `WeaponManager.Shoot()` calculates the raycast hit, applies damage, then calls `photonView.RPC("WeaponShootVFX")` to broadcast visual effects.
